@@ -1,0 +1,12 @@
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-focal AS base
+RUN apt-get update
+RUN apt-get upgrade -y
+
+RUN apt-get install -y curl
+
+WORKDIR /app
+EXPOSE 8080
+EXPOSE 3118
+
+COPY ./publish .
+ENTRYPOINT ["dotnet", "SvcOrder.dll"]

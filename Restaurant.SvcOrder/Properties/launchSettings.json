@@ -1,0 +1,13 @@
+﻿{
+  "profiles": {
+    "restaurant-svcorder": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "externalUrlConfiguration": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
