@@ -9,4 +9,4 @@ EXPOSE 8080
 EXPOSE 3118
 
 COPY ./publish .
-ENTRYPOINT ["dotnet", "SvcOrder.dll"]
+ENTRYPOINT ["dotnet", "Restaurant.SvcOrder.dll"]

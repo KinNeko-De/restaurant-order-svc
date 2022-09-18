@@ -1,11 +1,11 @@
 version: '3.9'
 
 services:
-  restaurant-svcorder-svc:
-    image: restaurant.svcorder-svc
+  restaurant-order-svc:
+    image: restaurant.order-svc
     networks:
       - dev-net
-    container_name: restaurant.svcorder-svc
+    container_name: restaurant.order-svc
     build:
       dockerfile: dockerfile
     ports:
