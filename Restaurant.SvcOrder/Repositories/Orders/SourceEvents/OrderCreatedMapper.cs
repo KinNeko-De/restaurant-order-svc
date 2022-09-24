@@ -10,7 +10,7 @@ namespace Restaurant.SvcOrder.Repositories.Orders.SourceEvents;
 
 /// Converts the different persistence model to a common source event that is used inside of the domain.
 /// </summary>
-public static class OrderCreatedMapper
+public class OrderCreatedMapper
 {
     /// <summary>
     /// Used to persist newest source event
@@ -18,7 +18,7 @@ public static class OrderCreatedMapper
     /// </summary>
     /// <param name="domain"></param>
     /// <returns></returns>
-    public static OrderCreatedV2 ToDatamodel(this OrderCreated domain)
+    public static OrderCreatedV2 ToDatamodel(OrderCreated domain)
     {
         return new OrderCreatedV2()
         {
@@ -28,33 +28,44 @@ public static class OrderCreatedMapper
 
     /// <summary>
     /// Converts the current persistence model to a common source event that is used inside of the domain.
+    /// You may leave that out but that would pull your persistence model into your core domain
     /// </summary>
+    /// <param name="order"></param>
     /// <param name="sourceEventId"></param>
     /// <param name="orderCreatedV2"></param>
     /// <returns></returns>
-    public static OrderCreated FromDatamodel(SourceEventId sourceEventId, OrderCreatedV2 orderCreatedV2)
+    public static OrderCreated FromDatamodel(Order order, SourceEventId sourceEventId, OrderCreatedV2 orderCreatedV2)
     {
-        return new OrderCreated()
+        var domainSourceEvent = new OrderCreated()
         {
             Id = sourceEventId,
             OrderId = new OrderId(orderCreatedV2.OrderId.ToGuid())
         };
+
+        order.ApplySourceEvent(domainSourceEvent);
+
+        return domainSourceEvent;
     }
 
     /// <summary>
     /// Converts the an outdated persistence model to a common source event that is used inside of the domain.
     /// You do not need to convert the source events in the database
     /// </summary>
+    /// <param name="order"></param>
     /// <param name="sourceEventId"></param>
     /// <param name="orderCreatedV1"></param>
     /// <returns></returns>
-    public static OrderCreated FromDatamodel(SourceEventId sourceEventId, OrderCreatedV1 orderCreatedV1)
+    public static OrderCreated FromDatamodel(Order order, SourceEventId sourceEventId, OrderCreatedV1 orderCreatedV1)
     {
         var orderGuid = Guid.Parse(orderCreatedV1.OrderId);
-        return new OrderCreated()
+        var domainSourceEvent = new OrderCreated()
         {
             Id = sourceEventId,
             OrderId = new OrderId(orderGuid)
         };
+
+        order.ApplySourceEvent(domainSourceEvent);
+
+        return domainSourceEvent;
     }
 }

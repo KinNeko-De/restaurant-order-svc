@@ -1,6 +1,6 @@
-﻿namespace Restaurant.SvcOrder.Repositories.Orders;
+﻿namespace Restaurant.SvcOrder.Repositories;
 
-public class ReadOrderSourceEvent
+public class ReadSourceEvent
 {
     public Guid Id { get; init; }
 
