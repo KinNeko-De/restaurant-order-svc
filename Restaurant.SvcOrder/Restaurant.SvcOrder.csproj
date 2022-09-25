@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Remove="Repositories\Orders\SourceEvents\order.proto" />
+    <None Remove="Repositories\Orders\SourceEvents\order_legacy.proto" />
     <None Remove="Repositories\SourceEvents\uuid.proto" />
   </ItemGroup>
 
@@ -27,6 +28,7 @@
 
   <ItemGroup>
     <Protobuf Include="Repositories\Orders\SourceEvents\order.proto" GrpcServices="None" />
+    <Protobuf Include="Repositories\Orders\SourceEvents\order_legacy.proto" GrpcServices="None" />
     <Protobuf Include="Repositories\SourceEvents\uuid.proto" GrpcServices="None" />
   </ItemGroup>
 

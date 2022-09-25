@@ -4,10 +4,6 @@ import "Repositories/SourceEvents/uuid.proto";
 
 package Restaurant.SvcOrder.Repositories.Orders.SourceEvents;
 
-message OrderCreatedV1 {
-  string order_id = 1;
-}
-
 message OrderCreatedV2 {
   Restaurant.SvcOrder.Repositories.SourceEvents.Uuid order_id = 1;
 }
