@@ -9,9 +9,7 @@ public class Order : AggregateRoot
 {
     public Order(OrderCreated orderCreated)
     {
-        var order = new Order();
-
-        order.ApplySourceEvent(orderCreated);
+        ApplySourceEvent(orderCreated);
         NewSourceEvent(orderCreated);
     }
 
@@ -21,7 +19,7 @@ public class Order : AggregateRoot
 
     public void ApplySourceEvent(OrderCreated orderCreated)
     {
-        Id =   orderCreated.OrderId;
+        Id =  orderCreated.OrderId;
     }
 
     public static async Task<Order> Load(OrderId orderId, IOrderRepository orderRepository, CancellationToken cancellationToken)

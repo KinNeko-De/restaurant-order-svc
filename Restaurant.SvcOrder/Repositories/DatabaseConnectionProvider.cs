@@ -40,7 +40,8 @@ public class DatabaseConnectionProvider
                 Password = connectionConfig.Password,
                 TrustServerCertificate = connectionConfig.TrustServerCertificate,
                 SslMode = connectionConfig.SslMode,
-                MaxPoolSize = connectionConfig.MaxPoolSize
+                MaxPoolSize = connectionConfig.MaxPoolSize,
+                Timeout =connectionConfig.Timeout,
             };
 
             connectionString = builder.ConnectionString;

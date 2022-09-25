@@ -16,9 +16,11 @@ public class DatabaseConnectionConfig
 
     public string? Password { get; set; }
 
-    public bool TrustServerCertificate { get; set; }
-
     public SslMode SslMode { get; set; }
 
+    public bool TrustServerCertificate { get; set; }
+
     public int MaxPoolSize { get; set; }
+
+    public int Timeout { get; set; }
 }

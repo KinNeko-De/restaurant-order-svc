@@ -40,7 +40,7 @@ public class OrderRepository : IOrderRepository
 id AS {nameof(ReadSourceEvent.Id)},
 sequence_number AS {nameof(ReadSourceEvent.SequenceNumber)},
 type AS {nameof(ReadSourceEvent.Type)},
-data AS {nameof(ReadSourceEvent.Data)},
+data AS {nameof(ReadSourceEvent.Data)}
 FROM {RootName}_event 
 where aggregate_root_id = @{nameof(parameter.OrderId)}",
             parameter,
