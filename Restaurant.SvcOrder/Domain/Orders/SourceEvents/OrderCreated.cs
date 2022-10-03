@@ -9,6 +9,7 @@ namespace Restaurant.SvcOrder.Domain.Orders.SourceEvents;
 /// 1. data types: There is no difference between a Guid and a Guid? in protobuf. also there is no difference between dateonly and datetime
 /// 2. test data based on c# types
 /// 3. common event for breaking changes. alternatively you can always use the highest protobuf source event and convert all other to that
+/// 4. You can set here required field without a breaking change in your persistence model
 /// </summary>
 public class OrderCreated : ISourceEvent
 {
