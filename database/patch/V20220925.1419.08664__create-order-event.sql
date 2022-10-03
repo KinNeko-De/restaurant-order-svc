@@ -7,7 +7,7 @@ CREATE TABLE order_event
     data bytea NOT NULL,
     created_at timestamp NOT NULL,
     PRIMARY KEY (id),
-    CONSTRAINT ux_order_event__aggregate_root_id_sequence_number_key UNIQUE (aggregate_root_id, sequence_number)
+    CONSTRAINT ux_order_event__aggregate_root_id_sequence_number UNIQUE (aggregate_root_id, sequence_number)
 );
 
 CREATE INDEX ix_order_event__aggregate_root_id ON order_event (aggregate_root_id);
