@@ -5,7 +5,7 @@ CREATE TABLE order_event
     sequence_number int NOT NULL,
     type text NOT NULL,
     data bytea NOT NULL,
-    created_at timestamp NOT NULL,
+    created_at timestamptz NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT ux_order_event__aggregate_root_id_sequence_number UNIQUE (aggregate_root_id, sequence_number)
 );
