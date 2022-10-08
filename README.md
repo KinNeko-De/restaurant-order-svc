@@ -16,6 +16,11 @@ The solution uses [Onion Architecture](https://jeffreypalermo.com/2008/07/the-on
 
 I know that the architecture do not have to be so complex for microservices. You have a low complexity inside your service. But i generally like to separate things but i do not use different projects to enforce the architecture. I currently have a circular dependency between domain and persistence because the source event [OrderCreated](Restaurant.SvcOrder/Domain/Orders/SourceEvents/OrderCreated.cs) uses the [OrderCreatedMapper](Restaurant.SvcOrder/Repositories/Orders/SourceEvents/OrderCreatedMapper.cs) as static class. I may remove this in the future, but i am still bound to IMessage in the interface [ISourceEvent](Restaurant.SvcOrder/Domain/SourceEvents/ISourceEvent.cs).
 
+# Automation
+Every time you push something a [pipeline](.github/workflows/pipeline.yml) will run. As developers, we are working to automate processes and thus eliminate manual work. There's no excuse why we have to do things manually.
+
+![example event parameter](https://github.com/kinneko-de/restaurant-order-svc/actions/workflows/pipeline.yml/badge.svg?event=push)
+
 # Logging
 Is out of scope for now.
 
@@ -28,6 +33,8 @@ Write tests when ever they are needed and are useful.
 Never try to spare time here. You have to invest more time later.
 
 Never write useless tests to get a high code coverage.
+
+[![codecov](https://codecov.io/gh/KinNeko-De/restaurant-order-svc/branch/master/graph/badge.svg?token=F2ADS06FGH)](https://codecov.io/gh/KinNeko-De/restaurant-order-svc)
 
 Tests need to be maintained as normla code. Keep that in mind while you write tests.
 
