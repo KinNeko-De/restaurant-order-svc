@@ -19,6 +19,8 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 6.x
+    - name: List Github nuget source
+      run: dotnet nuget list source
     - name: Configure Github nuget source
       run: dotnet nuget add source https://nuget.pkg.github.com/KinNeko-De/index.json --name github2 --username KinNeko-De --password ${{secrets.NUGET_RESTORE_API_KEY_GITHUB}}
     - name: Restore dependencies
