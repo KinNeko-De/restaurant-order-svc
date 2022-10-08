@@ -22,7 +22,7 @@ jobs:
     - name: List Github nuget source
       run: dotnet nuget list source
     - name: Configure Github nuget source
-      run: dotnet nuget update source github --username KinNeko-De --password ${{secrets.NUGET_RESTORE_API_KEY_GITHUB}}
+      run: dotnet nuget update source github --username KinNeko-De --password ${{secrets.NUGET_RESTORE_API_KEY_GITHUB}} --store-password-in-clear-text
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
