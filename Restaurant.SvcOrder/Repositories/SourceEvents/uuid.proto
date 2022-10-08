@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package Restaurant.SvcOrder.Repositories.SourceEvents;
+
+// Contains a Universally Unique Identifier of Version 4 in the following format: 8-4-4-4-12 XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+message Uuid {
+	string value = 1;
+}

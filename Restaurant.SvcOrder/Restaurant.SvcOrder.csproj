@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -7,11 +7,29 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Repositories\Orders\SourceEvents\order.proto" />
+    <None Remove="Repositories\Orders\SourceEvents\order_legacy.proto" />
+    <None Remove="Repositories\SourceEvents\uuid.proto" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="Grpc.AspNetCore.HealthChecks" Version="2.47.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.48.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Npgsql" Version="6.0.7" />
     <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
     <PackageReference Include="Serilog.Formatting.Compact" Version="1.1.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="3.3.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="Repositories\Orders\SourceEvents\order.proto" GrpcServices="None" />
+    <Protobuf Include="Repositories\Orders\SourceEvents\order_legacy.proto" GrpcServices="None" />
+    <Protobuf Include="Repositories\SourceEvents\uuid.proto" GrpcServices="None" />
   </ItemGroup>
 
 </Project>

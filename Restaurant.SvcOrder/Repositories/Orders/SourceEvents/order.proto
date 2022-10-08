@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "Repositories/SourceEvents/uuid.proto";
+
+package Restaurant.SvcOrder.Repositories.Orders.SourceEvents;
+
+message OrderCreatedV2 {
+  Restaurant.SvcOrder.Repositories.SourceEvents.Uuid order_id = 1;
+}
