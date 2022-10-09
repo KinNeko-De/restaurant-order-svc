@@ -23,9 +23,37 @@ namespace Restaurant.SvcOrder;
 
 public class Program
 {
-    private static void ConfigureDependencyInjection(IServiceCollection services, ConfigurationManager configuration)
+    private static void ConfigureDependencyInjection(IServiceCollection services, ConfigurationManager configurationManager)
     {
-        
+        ConfigureDatabaseConnection(services, configurationManager);
+
+        void ConfigureDatabaseConnection(IServiceCollection serviceCollection, ConfigurationManager configurationManager)
+        {
+            serviceCollection.Configure<Repositories.DatabaseConnectionConfig>(configurationManager.GetSection(nameof(Repositories.DatabaseConnectionConfig)));
+            serviceCollection.AddSingleton<Repositories.DatabaseConnectionProvider>(); // singleton because the the connection string is only created once
+        }
+    }
+
+    private static void ConfigureServices(IServiceCollection services, ConfigurationManager configurationManager)
+    {
+        ConfigureDependencyInjection(services, configurationManager);
+
+        AddHostedServices();
+
+        services.AddHealthChecks()
+            .AddCheck<Operations.HealthChecks.Diagnostics.HttpHealthCheck>(
+                "http_health_check",
+                HealthStatus.Unhealthy,
+                new[] { "ready" });
+
+        services.AddControllers().AddControllersAsServices();
+
+        services.AddGrpc();
+
+        void AddHostedServices()
+        {
+            services.AddHostedService<BackgroundServices.DatabaseConfigurationCheck>();
+        }
     }
 
     public static async Task<int> Main(string[] args)
@@ -42,6 +70,10 @@ public class Program
 
             await app.RunAsync();
 
+            return 0;
+        }
+        catch (OperationCanceledException)
+        {
             return 0;
         }
         catch (Exception ex)
@@ -67,20 +99,6 @@ public class Program
         ConfigureWebHost(builder.WebHost);
         ConfigureServices(builder.Services, builder.Configuration);
         return builder;
-    }
-
-    private static void ConfigureServices(IServiceCollection services, ConfigurationManager configuration)
-    {
-        ConfigureDependencyInjection(services, configuration);
-        services.AddHealthChecks()
-            .AddCheck<Operations.HealthChecks.Diagnostics.HttpHealthCheck>(
-                "http_health_check",
-                HealthStatus.Unhealthy,
-                new[] { "ready" });
-
-        services.AddControllers().AddControllersAsServices();
-
-        services.AddGrpc();
     }
 
     private static void ConfigureConfiguration(IConfigurationBuilder configuration)
