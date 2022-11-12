@@ -27,7 +27,7 @@ public class Program
     {
         ConfigureDatabaseConnection(services, configurationManager);
 
-        void ConfigureDatabaseConnection(IServiceCollection serviceCollection, ConfigurationManager configurationManager)
+        static void ConfigureDatabaseConnection(IServiceCollection serviceCollection, ConfigurationManager configurationManager)
         {
             serviceCollection.Configure<Repositories.DatabaseConnectionConfig>(configurationManager.GetSection(nameof(Repositories.DatabaseConnectionConfig)));
             serviceCollection.AddSingleton<Repositories.DatabaseConnectionProvider>(); // singleton because the the connection string is only created once
