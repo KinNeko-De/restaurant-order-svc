@@ -1,6 +1,6 @@
 ﻿{
   "profiles": {
-    "restaurant-order": {
+    "Restaurant-SvcOrder": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,
