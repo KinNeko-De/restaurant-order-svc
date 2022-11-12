@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
-using Restaurant.SvcOrder.Repositories;
 
-namespace Restaurant.SvcOrder.BackgroundServices;
+namespace Restaurant.SvcOrder.Repositories;
 
 /// <summary>
 /// Checks if the configuration of the database is correct and a connection can be established.

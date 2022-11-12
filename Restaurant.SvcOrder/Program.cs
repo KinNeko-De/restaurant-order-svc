@@ -31,14 +31,13 @@ public class Program
         {
             serviceCollection.Configure<Repositories.DatabaseConnectionConfig>(configurationManager.GetSection(nameof(Repositories.DatabaseConnectionConfig)));
             serviceCollection.AddSingleton<Repositories.DatabaseConnectionProvider>(); // singleton because the the connection string is only created once
+            serviceCollection.AddHostedService<Repositories.DatabaseConfigurationCheck>();
         }
     }
 
     private static void ConfigureServices(IServiceCollection services, ConfigurationManager configurationManager)
     {
         ConfigureDependencyInjection(services, configurationManager);
-
-        AddHostedServices();
 
         services.AddHealthChecks()
             .AddCheck<Operations.HealthChecks.Diagnostics.HttpHealthCheck>(
@@ -49,11 +48,6 @@ public class Program
         services.AddControllers().AddControllersAsServices();
 
         services.AddGrpc();
-
-        void AddHostedServices()
-        {
-            services.AddHostedService<BackgroundServices.DatabaseConfigurationCheck>();
-        }
     }
 
     public static async Task<int> Main(string[] args)
