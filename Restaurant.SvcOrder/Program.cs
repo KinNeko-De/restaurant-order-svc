@@ -1,7 +1,9 @@
+using System.Diagnostics.Metrics;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Restaurant.SvcOrder.Operations.Metrics;
 using Serilog;
 using Serilog.Events;
 #pragma warning disable IDE0079 // Remove unnecessary suppression
@@ -25,6 +27,7 @@ public class Program
 {
     private static void ConfigureDependencyInjection(IServiceCollection services, ConfigurationManager configurationManager)
     {
+        ConfigureMetrics(services, configurationManager);
         ConfigureDatabaseConnection(services, configurationManager);
 
         static void ConfigureDatabaseConnection(IServiceCollection serviceCollection, ConfigurationManager configurationManager)
@@ -33,6 +36,13 @@ public class Program
             serviceCollection.AddSingleton<Repositories.DatabaseConnectionProvider>(); // singleton because the the connection string is only created once
             serviceCollection.AddHostedService<Repositories.DatabaseConfigurationCheck>();
         }
+
+        void ConfigureMetrics(IServiceCollection serviceCollection, ConfigurationManager configurationManager1)
+        {
+            serviceCollection.AddSingleton<Metric>();
+        }
+
+
     }
 
     private static void ConfigureServices(IServiceCollection services, ConfigurationManager configurationManager)

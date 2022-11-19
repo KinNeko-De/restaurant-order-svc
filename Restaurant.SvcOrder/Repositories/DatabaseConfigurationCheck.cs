@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Restaurant.SvcOrder.Operations.Metrics;
 
 namespace Restaurant.SvcOrder.Repositories;
 
@@ -9,14 +10,17 @@ namespace Restaurant.SvcOrder.Repositories;
 public class DatabaseConfigurationCheck : BackgroundService
 {
     private readonly ILogger<DatabaseConfigurationCheck> logger;
+    private readonly Metric metric;
     private readonly DatabaseConnectionProvider databaseConnectionProvider;
 
     public DatabaseConfigurationCheck(
         ILogger<DatabaseConfigurationCheck> logger,
+        Metric metric,
         DatabaseConnectionProvider databaseConnectionProvider
         )
     {
         this.logger = logger;
+        this.metric = metric;
         this.databaseConnectionProvider = databaseConnectionProvider;
     }
 
@@ -39,6 +43,7 @@ public class DatabaseConfigurationCheck : BackgroundService
             {
                 stopwatch.Stop();
                 logger.LogError(exception, "DatabaseConnection can not be established. Duration {ElapsedMilliseconds} ms.", stopwatch.ElapsedMilliseconds);
+                metric.DatabaseConnectionErrorOccurred();
             }
         }
 
