@@ -2,7 +2,7 @@
 
 namespace Restaurant.SvcOrder.Repositories;
 
-public class DatabaseConnectionConfig
+public class DatabaseConnectionConfiguration
 {
     public string? Host { get; set; }
 

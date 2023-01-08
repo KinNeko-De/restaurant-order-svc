@@ -5,11 +5,11 @@ namespace Restaurant.SvcOrder.Repositories;
 
 public class DatabaseConnectionProvider
 {
-    private readonly DatabaseConnectionConfig connectionConfig;
+    private readonly DatabaseConnectionConfiguration connectionConfig;
     private string? connectionString;
 
     public DatabaseConnectionProvider(
-        IOptions<DatabaseConnectionConfig> connectionConfig
+        IOptions<DatabaseConnectionConfiguration> connectionConfig
     )
     {
         this.connectionConfig = connectionConfig.Value;
