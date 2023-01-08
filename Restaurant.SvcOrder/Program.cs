@@ -54,19 +54,6 @@ public class Program
             var metricConfiguration = metricSection.Get<Operations.Metrics.MetricConfiguration>() ?? throw new InvalidOperationException($"{nameof(Operations.Metrics.MetricConfiguration)} can not be null");
             services.Configure<Operations.Metrics.MetricConfiguration>(metricSection);
 
-            /*
-            services.AddOpenTelemetryMetrics(metricBuilder => metricBuilder
-                .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("restaurant-order-svc-metric-collector"))
-                .AddMeter(Operations.Metrics.Metric.ApplicationName)
-                // .AddAspNetCoreInstrumentation()
-                .AddRuntimeInstrumentation()
-                .AddConsoleExporter(builder => builder.Targets = ConsoleExporterOutputTargets.Console)
-                .AddOtlpExporter(opts =>
-                {
-                    opts.Endpoint = new Uri(metricConfiguration.BuildUri());
-                    opts.Protocol = OtlpExportProtocol.HttpProtobuf;
-                }));
-            */
             services.AddOpenTelemetry()
                 .WithMetrics(metricBuilder => metricBuilder
                     .AddMeter(Operations.Metrics.Metric.ApplicationName)
@@ -237,7 +224,7 @@ public class Program
         {
             serverOptions.ListenAnyIP(8080, listenOptions => { listenOptions.Protocols = HttpProtocols.Http1; });
             serverOptions.ListenAnyIP(3118, listenOptions => { listenOptions.Protocols = HttpProtocols.Http2; });
-            serverOptions.ListenAnyIP(4318, listenOptions => { listenOptions.Protocols = HttpProtocols.Http2; });
+            serverOptions.ListenAnyIP(4318, listenOptions => { listenOptions.Protocols = HttpProtocols.Http2; }); // metrics exporter
             // serverOptions.ListenAnyIP(7106, listenOptions => { listenOptions.Protocols = HttpProtocols.Http3; });
         });
     }
