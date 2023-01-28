@@ -37,6 +37,8 @@ jobs:
     - name: ComponentTest
       run: dotnet test Tests/*.ComponentTest --no-build --no-restore -c Release -p:Version=${{ env.SEMANTIC_VERSION }} --verbosity normal --collect:"XPlat Code Coverage" --settings Tests/coverlet.runsettings --results-directory=Tests/coverage
       timeout-minutes: 20
+    - name: Publish
+      run: dotnet publish -c Release --no-restore --no-build --no-self-contained
     - name: Start system under test
       run: docker compose -f sut/docker-compose.yml up --wait
     - name: IntegrationTest
