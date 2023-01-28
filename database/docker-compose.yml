@@ -28,6 +28,17 @@ services:
         condition: service_healthy
     volumes:
       - ./patch:/sql
+  restaurant-order-db-patch-validate:
+    image: flyway/flyway
+    command: validate -user=${DB_USER} -password=${DB_PASSWORD} -url="jdbc:postgresql://restaurant-order-db:5432/${DB_DATABASE}" -schemas=${DB_SCHEMA} -locations='filesystem:/sql'
+    networks:
+      - dev-net
+    container_name: restaurant-order-db-patch-validate
+    depends_on:
+      restaurant-order-db-patch:
+        condition: service_completed_successfully
+    volumes:
+      - ./patch:/sql
 networks:
   dev-net:
     name: restaurant-dev-net
