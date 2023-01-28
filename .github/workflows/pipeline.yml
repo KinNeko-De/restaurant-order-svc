@@ -47,6 +47,9 @@ jobs:
 
     - name: Start system under test
       run: docker compose -f sut/docker-compose.yml up --wait --quiet-pull
+    - name: Start system under test logs
+      if: failure()
+      run: docker compose -f sut/docker-compose.yml logs
     - name: IntegrationTest
       run: dotnet test Tests/*.IntegrationTest --no-build --no-restore -c Release -p:Version=${{ env.SEMANTIC_VERSION }} --verbosity normal --collect:"XPlat Code Coverage" --settings Tests/coverlet.runsettings --results-directory=Tests/coverage
       timeout-minutes: 10
