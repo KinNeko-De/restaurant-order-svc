@@ -36,7 +36,7 @@ jobs:
     - name: Start database
       run: docker compose -f database/docker-compose.yml up --wait --quiet-pull
     - name: Start database logs
-      if: failed()
+      if: failure()
       run: docker compose -f database/docker-compose.yml logs
     - name: ComponentTest
       run: dotnet test Tests/*.ComponentTest --no-build --no-restore -c Release -p:Version=${{ env.SEMANTIC_VERSION }} --verbosity normal --collect:"XPlat Code Coverage" --settings Tests/coverlet.runsettings --results-directory=Tests/coverage
