@@ -40,7 +40,7 @@ jobs:
       timeout-minutes: 20
 
     - name: Publish
-      run: dotnet publish Restaurant.SvcOrder/Restaurant.SvcOrder.csproj -o publish -c Release --no-restore --no-build --no-self-contained
+      run: dotnet publish Restaurant.SvcOrder/Restaurant.SvcOrder.csproj -o sut/publish -c Release --no-restore --no-build --no-self-contained
 
     - name: Start system under test
       run: docker compose -f sut/docker-compose.yml up --wait
