@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
-using Restaurant.SvcOrder.Domain.Orders;
 using Restaurant.SvcOrder.Repositories;
 using Restaurant.SvcOrder.Repositories.Orders;
 using Restaurant.SvcOrder.Testing.Domain.Orders;

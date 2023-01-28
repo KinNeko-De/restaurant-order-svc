@@ -27,8 +27,27 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore -c Release -p:Version=${{ env.SEMANTIC_VERSION }}
-    - name: Test
+    - name: UnitTest
       run: dotnet test Tests/*.UnitTest --no-build --no-restore -c Release -p:Version=${{ env.SEMANTIC_VERSION }} --verbosity normal --collect:"XPlat Code Coverage" --settings Tests/coverlet.runsettings --results-directory=Tests/coverage
+      timeout-minutes: 10
+    - name: Start database
+      run: docker compose -f database/docker-compose.yml up --wait
+    - name: ComponentTest
+      run: dotnet test Tests/*.ComponentTest --no-build --no-restore -c Release -p:Version=${{ env.SEMANTIC_VERSION }} --verbosity normal --collect:"XPlat Code Coverage" --settings Tests/coverlet.runsettings --results-directory=Tests/coverage
+      timeout-minutes: 20
+    - name: Start system under test
+      run: docker compose -f sut/docker-compose.yml up --wait
+    - name: IntegrationTest
+      run: dotnet test Tests/*.IntegrationTest --no-build --no-restore -c Release -p:Version=${{ env.SEMANTIC_VERSION }} --verbosity normal --collect:"XPlat Code Coverage" --settings Tests/coverlet.runsettings --results-directory=Tests/coverage
+      timeout-minutes: 10
+    - name: Stop system under test
+      run: docker compose 
+    - name: Stop database
+      if: always()
+      run: docker compose -f database/docker-compose.yml down
+    - name: Stop system under test
+      if: always()
+      run: docker compose -f sut/docker-compose.yml down
     - name: Publish code coverage
       uses: codecov/codecov-action@v3
       with:
