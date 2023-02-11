@@ -19,14 +19,14 @@ services:
       start_period: 5s
       retries: 5
     environment:
-    - DatabaseConnectionConfig__Host=restaurant-order-db
-    - DatabaseConnectionConfig__Port=5432
-    - DatabaseConnectionConfig__Database=orderdatabase
-    - DatabaseConnectionConfig__User=orderuser
-    - DatabaseConnectionConfig__Password=orderpassword
-    - DatabaseConnectionConfig__MaxPoolSize=5
-    - DatabaseConnectionConfig__SearchPath=order
-    - DatabaseConnectionConfig__SslMode=Prefer
+    - DatabaseConnectionConfiguration__Host=restaurant-order-db
+    - DatabaseConnectionConfiguration__Port=5432
+    - DatabaseConnectionConfiguration__Database=orderdatabase
+    - DatabaseConnectionConfiguration__User=orderuser
+    - DatabaseConnectionConfiguration__Password=orderpassword
+    - DatabaseConnectionConfiguration__MaxPoolSize=5
+    - DatabaseConnectionConfiguration__SearchPath=order
+    - DatabaseConnectionConfiguration__SslMode=Prefer
     - Serilog__Using=Serilog.Sinks.Console
     - Serilog__MinimumLevel__Default=Information
     - Serilog__MinimumLevel__Override__Microsoft=Warning
