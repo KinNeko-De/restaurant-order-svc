@@ -20,7 +20,7 @@ services:
       retries: 5
     environment:
     - DatabaseConnectionConfig__Host=restaurant-order-db
-    - DatabaseConnectionConfig__Port=23100
+    - DatabaseConnectionConfig__Port=5432
     - DatabaseConnectionConfig__Database=orderdatabase
     - DatabaseConnectionConfig__User=orderuser
     - DatabaseConnectionConfig__Password=orderpassword
