@@ -58,21 +58,24 @@ public class Program
             services.AddOpenTelemetry()
                 .WithMetrics(metricBuilder => metricBuilder
                     .AddMeter(Operations.Metrics.Metric.ApplicationName)
-                    // .AddRuntimeInstrumentation()
-                    // .AddAspNetCoreInstrumentation()
+                // TODO RuntimeInstrumentation works but spams the console. reactivate after every thing is done
+                // .AddRuntimeInstrumentation()
+                // TODO find out which package should be used for AspNetCoreInstrumentation
+                // .AddAspNetCoreInstrumentation()
+#if DEBUG
                     .AddConsoleExporter(builder => builder.Targets = ConsoleExporterOutputTargets.Console)
-                    /* Exporter endpoint where you find the open telemetry collector (push) or where to expose (pull)
-                    .AddOtlpExporter(
-                        otlpConfig =>
-                        {
-                            otlpConfig.Endpoint = new Uri(metricConfiguration.BuildUri());
-                            otlpConfig.Protocol = OtlpExportProtocol.Grpc;
-                        })
-                    */
+#endif
+                /* Exporter endpoint where you find the open telemetry collector (push) or where to expose (pull)
+                .AddOtlpExporter(
+                    otlpConfig =>
+                    {
+                        otlpConfig.Endpoint = new Uri(metricConfiguration.BuildUri());
+                        otlpConfig.Protocol = OtlpExportProtocol.Grpc;
+                    })
+                */
                 )
                 .StartWithHost();
-            
-            }
+        }
     }
 
     private static void ConfigureServices(IServiceCollection services, ConfigurationManager configurationManager)
