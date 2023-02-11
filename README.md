@@ -30,12 +30,18 @@ Is out of scope for now.
 
 # Metrics
 Is activated.
-To debug that on a local started application get the process id from the visual studio ui
-Open a cmd
+
+A console exporter for the local usage is automatically started.
+
+You can also use dotnet counters on a local started application.
+1. get the process id from the visual studio ui
+2. Open a cmd
 
 dotnet tool install --global dotnet-counters
 dotnet counters monitor --process-id <process_id> --counters restaurant-order-svc // for application metrics
 dotnet counters monitor --process-id <process_id> // for System.Runtime metrics
+
+As alternative a console exporter for the local usage is automatically started.
 
 
 # Tracing
