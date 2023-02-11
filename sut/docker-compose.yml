@@ -18,6 +18,25 @@ services:
       timeout: 3s
       start_period: 5s
       retries: 5
+    environment:
+    - DatabaseConnectionConfig__Host=restaurant-order-db
+    - DatabaseConnectionConfig__Port=23100
+    - DatabaseConnectionConfig__Database=orderdatabase
+    - DatabaseConnectionConfig__User=orderuser
+    - DatabaseConnectionConfig__Password=orderpassword
+    - DatabaseConnectionConfig__MaxPoolSize=5
+    - DatabaseConnectionConfig__SearchPath=order
+    - DatabaseConnectionConfig__SslMode=Prefer
+    - Serilog__Using=Serilog.Sinks.Console
+    - Serilog__MinimumLevel__Default=Information
+    - Serilog__MinimumLevel__Override__Microsoft=Warning
+    - Serilog__MinimumLevel__Override__System=Warning
+    - Serilog__MinimumLevel__Override__Microsoft.AspNetCore.Hosting.Diagnostics=Information
+    - Serilog__WriteTo__0__Name=Console
+    - Serilog__WriteTo__0__Args__theme=Serilog.Sinks.SystemConsole.Themes.AnsiConsoleTheme::Code, Serilog.Sinks.Console
+    - Serilog__WriteTo__0__Args__outputTemplate=[{Timestamp:o}] [{Level:u3}] [{Application}] [{Message}] [{Exception}] [{Properties:j}] {NewLine}
+    - Serilog__Enrich=FromLogContext
+    - Serilog__Properties__Application=restaurant.order-svc
 networks:
   dev-net:
     name: restaurant-dev-net
