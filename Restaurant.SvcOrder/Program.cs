@@ -50,22 +50,25 @@ public class Program
 
         void ConfigureMetricsEndpoint()
         {
-            var metricSection = configurationManager.GetSection(nameof(Operations.Metrics.MetricConfiguration));
-            var metricConfiguration = metricSection.Get<Operations.Metrics.MetricConfiguration>() ?? throw new InvalidOperationException($"{nameof(Operations.Metrics.MetricConfiguration)} can not be null");
-            services.Configure<Operations.Metrics.MetricConfiguration>(metricSection);
+            // TODO Configuration must be renamed based on if pull or push is used
+            //var metricSection = configurationManager.GetSection(nameof(Operations.Metrics.MetricConfiguration));
+            // var metricConfiguration = metricSection.Get<Operations.Metrics.MetricConfiguration>() ?? throw new InvalidOperationException($"{nameof(Operations.Metrics.MetricConfiguration)} can not be null");
+            // services.Configure<Operations.Metrics.MetricConfiguration>(metricSection);
 
             services.AddOpenTelemetry()
                 .WithMetrics(metricBuilder => metricBuilder
                     .AddMeter(Operations.Metrics.Metric.ApplicationName)
-                    .AddRuntimeInstrumentation()
+                    // .AddRuntimeInstrumentation()
                     // .AddAspNetCoreInstrumentation()
                     .AddConsoleExporter(builder => builder.Targets = ConsoleExporterOutputTargets.Console)
+                    /* Exporter endpoint where you find the open telemetry collector (push) or where to expose (pull)
                     .AddOtlpExporter(
                         otlpConfig =>
                         {
-                            // otlpConfig.Endpoint = new Uri(metricConfiguration.BuildUri());
-                            // otlpConfig.Protocol = OtlpExportProtocol.HttpProtobuf;
+                            otlpConfig.Endpoint = new Uri(metricConfiguration.BuildUri());
+                            otlpConfig.Protocol = OtlpExportProtocol.Grpc;
                         })
+                    */
                 )
                 .StartWithHost();
             
@@ -162,6 +165,7 @@ public class Program
         app.MapHealthChecks("/health/ready", new HealthCheckOptions()); // run all health checks
         app.MapGrpcService<Operations.HealthChecks.Grpc.GrpcHealthCheck>();
         app.MapControllers();
+        /* Use for open telemetry manual testing
         app.MapGet("/hello", () =>
         {
             using var activity = Activity.Current;
@@ -174,6 +178,7 @@ public class Program
 
             return "Hello, World!";
         });
+        */
     }
 
     private static void ConfigureHost(ConfigureHostBuilder host)
@@ -224,7 +229,6 @@ public class Program
         {
             serverOptions.ListenAnyIP(8080, listenOptions => { listenOptions.Protocols = HttpProtocols.Http1; });
             serverOptions.ListenAnyIP(3118, listenOptions => { listenOptions.Protocols = HttpProtocols.Http2; });
-            serverOptions.ListenAnyIP(4318, listenOptions => { listenOptions.Protocols = HttpProtocols.Http2; }); // metrics exporter
             // serverOptions.ListenAnyIP(7106, listenOptions => { listenOptions.Protocols = HttpProtocols.Http3; });
         });
     }
