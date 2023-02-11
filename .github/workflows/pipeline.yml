@@ -48,10 +48,7 @@ jobs:
       run: dotnet test Tests/*.IntegrationTest --no-build --no-restore -c Release -p:Version=${{ env.SEMANTIC_VERSION }} --verbosity normal --collect:"XPlat Code Coverage" --settings Tests/coverlet.runsettings --results-directory=Tests/coverage
       timeout-minutes: 10
 
-    - name: Show database logs
-      run: docker compose -f database/docker-compose.yml logs
-    - name: Show system under test logs
-      run: docker compose -f sut/docker-compose.yml logs
+
     - name: Stop system under test
       run: docker compose 
     - name: Stop database
@@ -60,6 +57,10 @@ jobs:
     - name: Stop system under test
       if: always()
       run: docker compose -f sut/docker-compose.yml down
+    - name: Show database logs
+      run: docker compose -f database/docker-compose.yml logs
+    - name: Show system under test logs
+      run: docker compose -f sut/docker-compose.yml logs
 
     - name: Publish code coverage
       uses: codecov/codecov-action@v3
