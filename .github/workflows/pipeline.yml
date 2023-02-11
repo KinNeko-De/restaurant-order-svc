@@ -18,7 +18,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: 6.x
+        dotnet-version: 7.x
     - name: Remove Github nuget source that was added with nuget.config
       run: dotnet nuget remove source github
     - name: Add Github nuget source
