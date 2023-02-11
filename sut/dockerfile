@@ -1,8 +1,5 @@
 FROM mcr.microsoft.com/dotnet/aspnet:7.0-jammy AS base
-RUN apt-get update
-RUN apt-get upgrade -y
-
-RUN apt-get install -y curl
+RUN apt-get update && apt-get upgrade -y && apt-get install -y curl
 
 WORKDIR /app
 EXPOSE 8080

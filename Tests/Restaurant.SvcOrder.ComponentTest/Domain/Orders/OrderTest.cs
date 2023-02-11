@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using Restaurant.SvcOrder.Domain.Orders;
 using Restaurant.SvcOrder.Domain.Orders.SourceEvents;
-using Restaurant.SvcOrder.Testing.Domain.Orders;
 
 namespace Restaurant.SvcOrder.ComponentTest.Domain.Orders;
 
