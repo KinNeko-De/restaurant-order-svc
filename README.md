@@ -21,11 +21,28 @@ Every time you push something a [pipeline](.github/workflows/pipeline.yml) will 
 
 ![example event parameter](https://github.com/kinneko-de/restaurant-order-svc/actions/workflows/pipeline.yml/badge.svg?event=push)
 
-# Logging
-Is out of scope for now.
 
 # Database
 See [Database-Readme](database/README.md) for further information.
+
+# Logging
+Is out of scope for now.
+
+# Metrics
+Is activated.
+
+A console exporter for the local usage is automatically started.
+
+You can also use dotnet counters on a local started application.
+1. get the process id from the visual studio ui
+2. Open a cmd
+
+dotnet tool install --global dotnet-counters
+dotnet counters monitor --process-id <process_id> --counters restaurant-order-svc // for application metrics
+dotnet counters monitor --process-id <process_id> // for System.Runtime metrics
+
+# Tracing
+Is out of scope for now.
 
 # Tests
 Write tests when ever they are needed and are useful.

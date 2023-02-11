@@ -5,9 +5,9 @@ using Restaurant.SvcOrder.Repositories;
 namespace Restaurant.SvcOrder.Testing.Repositories;
 public class DatabaseFixture
 {
-    private DatabaseConnectionConfig ConnectToLocalDatabase()
+    private DatabaseConnectionConfiguration ConnectToLocalDatabase()
     {
-        return new DatabaseConnectionConfig()
+        return new DatabaseConnectionConfiguration()
         {
             Host = "localhost",
             Port = 23100,
@@ -28,7 +28,7 @@ public class DatabaseFixture
     /// <returns>DatabaseConnectionProvider to connect to local running test database</returns>
     public DatabaseConnectionProvider GetConnectionProviderToLocalDatabase()
     {
-        IOptions<DatabaseConnectionConfig> databaseConnectionConfig = Options.Create(ConnectToLocalDatabase());
+        IOptions<DatabaseConnectionConfiguration> databaseConnectionConfig = Options.Create(ConnectToLocalDatabase());
         var databaseConnectionProvider = new DatabaseConnectionProvider(databaseConnectionConfig);
         return databaseConnectionProvider;
     }

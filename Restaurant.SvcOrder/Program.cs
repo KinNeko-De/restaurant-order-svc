@@ -1,9 +1,14 @@
 using System.Diagnostics.Metrics;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Restaurant.SvcOrder.Operations.Metrics;
+using OpenTelemetry;
+using OpenTelemetry.Exporter;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Serilog;
 using Serilog.Events;
 #pragma warning disable IDE0079 // Remove unnecessary suppression
@@ -27,22 +32,50 @@ public class Program
 {
     private static void ConfigureDependencyInjection(IServiceCollection services, ConfigurationManager configurationManager)
     {
-        ConfigureMetrics(services, configurationManager);
-        ConfigureDatabaseConnection(services, configurationManager);
+        ConfigureDatabaseConnection();
+        ConfigureMetrics();
+        ConfigureMetricsEndpoint();
 
-        static void ConfigureDatabaseConnection(IServiceCollection serviceCollection, ConfigurationManager configurationManager)
+        void ConfigureDatabaseConnection()
         {
-            serviceCollection.Configure<Repositories.DatabaseConnectionConfig>(configurationManager.GetSection(nameof(Repositories.DatabaseConnectionConfig)));
-            serviceCollection.AddSingleton<Repositories.DatabaseConnectionProvider>(); // singleton because the the connection string is only created once
-            serviceCollection.AddHostedService<Repositories.DatabaseConfigurationCheck>();
+            services.Configure<Repositories.DatabaseConnectionConfiguration>(configurationManager.GetSection(nameof(Repositories.DatabaseConnectionConfiguration)));
+            services.AddSingleton<Repositories.DatabaseConnectionProvider>(); // singleton because the the connection string is only created once
+            services.AddHostedService<Repositories.DatabaseConfigurationCheck>();
         }
 
-        void ConfigureMetrics(IServiceCollection serviceCollection, ConfigurationManager configurationManager1)
+        void ConfigureMetrics()
         {
-            serviceCollection.AddSingleton<Metric>();
+            services.AddSingleton<Operations.Metrics.Metric>();
         }
 
+        void ConfigureMetricsEndpoint()
+        {
+            // TODO Configuration must be renamed based on if pull or push is used
+            //var metricSection = configurationManager.GetSection(nameof(Operations.Metrics.MetricConfiguration));
+            // var metricConfiguration = metricSection.Get<Operations.Metrics.MetricConfiguration>() ?? throw new InvalidOperationException($"{nameof(Operations.Metrics.MetricConfiguration)} can not be null");
+            // services.Configure<Operations.Metrics.MetricConfiguration>(metricSection);
 
+            services.AddOpenTelemetry()
+                .WithMetrics(metricBuilder => metricBuilder
+                    .AddMeter(Operations.Metrics.Metric.ApplicationName)
+                // TODO RuntimeInstrumentation works but spams the console. reactivate after every thing is done
+                // .AddRuntimeInstrumentation()
+                // TODO find out which package should be used for AspNetCoreInstrumentation
+                // .AddAspNetCoreInstrumentation()
+#if DEBUG
+                    .AddConsoleExporter(builder => builder.Targets = ConsoleExporterOutputTargets.Console)
+#endif
+                /* Exporter endpoint where you find the open telemetry collector (push) or where to expose (pull)
+                .AddOtlpExporter(
+                    otlpConfig =>
+                    {
+                        otlpConfig.Endpoint = new Uri(metricConfiguration.BuildUri());
+                        otlpConfig.Protocol = OtlpExportProtocol.Grpc;
+                    })
+                */
+                )
+                .StartWithHost();
+        }
     }
 
     private static void ConfigureServices(IServiceCollection services, ConfigurationManager configurationManager)
@@ -130,14 +163,25 @@ public class Program
     private static void ConfigureApp(WebApplication app)
     {
         app.UseRouting();
-        
-        app.UseEndpoints(endpoints =>
+
+        app.MapHealthChecks("/health/live", new HealthCheckOptions() { Predicate = _ => false }); // runs no checks, just to test if application is live
+        app.MapHealthChecks("/health/ready", new HealthCheckOptions()); // run all health checks
+        app.MapGrpcService<Operations.HealthChecks.Grpc.GrpcHealthCheck>();
+        app.MapControllers();
+        /* Use for open telemetry manual testing
+        app.MapGet("/hello", () =>
         {
-            endpoints.MapHealthChecks("/health/live", new HealthCheckOptions() { Predicate = _ => false }); // runs no checks, just to test if application is live
-            endpoints.MapHealthChecks("/health/ready", new HealthCheckOptions()); // run all health checks
-            endpoints.MapGrpcService<Operations.HealthChecks.Grpc.GrpcHealthCheck>();
-            endpoints.MapControllers();
+            using var activity = Activity.Current;
+            activity?.SetTag("foo", 1);
+            activity?.SetTag("bar", "Hello, World!");
+            activity?.SetTag("baz", new int[] { 1, 2, 3 });
+
+            // Up a counter for each request
+            app.Services.GetRequiredService<Operations.Metrics.Metric>().TestRequestStarted();
+
+            return "Hello, World!";
         });
+        */
     }
 
     private static void ConfigureHost(ConfigureHostBuilder host)
@@ -146,7 +190,7 @@ public class Program
         {
             string[] excludedRequestPaths =
             {
-                "/health"
+                "/health",
             };
 
             loggerConfiguration.ReadFrom.Configuration(hostingContext.Configuration)
