@@ -41,9 +41,6 @@ dotnet tool install --global dotnet-counters
 dotnet counters monitor --process-id <process_id> --counters restaurant-order-svc // for application metrics
 dotnet counters monitor --process-id <process_id> // for System.Runtime metrics
 
-As alternative a console exporter for the local usage is automatically started.
-
-
 # Tracing
 Is out of scope for now.
 
