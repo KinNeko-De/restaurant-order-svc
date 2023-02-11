@@ -49,18 +49,16 @@ jobs:
       timeout-minutes: 10
 
 
-    - name: Stop system under test
-      run: docker compose 
+    - name: Show database logs
+      run: docker compose -f database/docker-compose.yml logs
+    - name: Show system under test logs
+      run: docker compose -f sut/docker-compose.yml logs
     - name: Stop database
       if: always()
       run: docker compose -f database/docker-compose.yml down
     - name: Stop system under test
       if: always()
       run: docker compose -f sut/docker-compose.yml down
-    - name: Show database logs
-      run: docker compose -f database/docker-compose.yml logs
-    - name: Show system under test logs
-      run: docker compose -f sut/docker-compose.yml logs
 
     - name: Publish code coverage
       uses: codecov/codecov-action@v3
