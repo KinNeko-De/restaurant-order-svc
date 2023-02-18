@@ -24,5 +24,6 @@ public partial class Order : AggregateRoot
     public void ApplySourceEvent(OrderCreated orderCreated)
     {
         Id =  orderCreated.OrderId;
+        SourceEventApplied(orderCreated);
     }
 }
