@@ -62,7 +62,7 @@ public partial class Order
     /// </summary>
     public class PersistenceContext
     {
-        public readonly IOrderRepository OrderRepository;
+        public IOrderRepository OrderRepository { get; }
 
         public PersistenceContext(IOrderRepository orderRepository)
         {
