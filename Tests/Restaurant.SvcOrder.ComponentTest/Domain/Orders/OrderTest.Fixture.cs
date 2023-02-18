@@ -48,6 +48,11 @@ public partial class OrderTest
         await orderRepositoryFixture.CleanupTables();
     }
 
+    /// <summary>
+    /// Creates a order as test data.
+    /// You can modify the test data using the builder pattern.
+    /// </summary>
+    /// <returns></returns>
     public OrderBuilder CreateOrder()
     {
         return new OrderBuilder();
@@ -64,7 +69,7 @@ public partial class OrderTest
     /// <summary>
     /// Defines all mocks that are used in this test
     /// </summary>
-    /// <remarks>Mocks can have state so renew the instance to avoid sharing state between tests</remarks>
+    /// <remarks>Mocks can have state so renew the instance before each test to avoid sharing state between tests</remarks>
     private class Mocks
     {
         public readonly ILogger<OrderRepository> LoggerRepository = new NullLogger<OrderRepository>();
