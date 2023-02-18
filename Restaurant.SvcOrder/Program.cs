@@ -35,6 +35,7 @@ public class Program
 
         void ConfigureUseCases()
         {
+            services.AddTransient<Repositories.Orders.OrderSourceEventMapping>();
             services.AddTransient<Domain.Orders.IOrderRepository, Repositories.Orders.OrderRepository>();
             services.AddTransient<Domain.Orders.Order.PersistenceContext>();
         }
