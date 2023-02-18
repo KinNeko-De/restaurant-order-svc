@@ -28,17 +28,18 @@ public partial class OrderPersistenceContextTest
     public async Task SaveLoad_ByOrderId_OrderCreated()
     {
         var expectedOrderId = OrderId.NewOrderId();
+        var expectedLastSequenceNumber = 1;
 
         var sut = CreateSystemUnderTest();
         var expectedOrder = CreateOrder()
             .WithId(expectedOrderId)
             .Build(sut);
         
-        
         await expectedOrder.Save(CancellationToken.None);
 
         var actualOrder = await sut.Load(expectedOrderId, CancellationToken.None);
 
         Assert.AreEqual(expectedOrderId, actualOrder.Id);
+        Assert.AreEqual(expectedLastSequenceNumber, actualOrder.GetLastSourceEventSequenceNumber());
     }
 }
