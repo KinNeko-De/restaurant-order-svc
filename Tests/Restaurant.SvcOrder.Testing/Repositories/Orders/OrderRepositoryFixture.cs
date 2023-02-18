@@ -9,12 +9,12 @@ namespace Restaurant.SvcOrder.Testing.Repositories.Orders;
 
 public class OrderRepositoryFixture
 {
-    private readonly DatabaseConnectionProvider databaseConnectionProvider;
+    public DatabaseConnectionProvider DatabaseConnectionProvider { get; }
 
 
     public OrderRepositoryFixture(DatabaseConnectionProvider databaseConnectionProvider)
     {
-        this.databaseConnectionProvider = databaseConnectionProvider;
+        DatabaseConnectionProvider = databaseConnectionProvider;
     }
 
     public static async Task SaveToLocalDatabase(Order order)
@@ -41,7 +41,7 @@ public class OrderRepositoryFixture
 
     public async Task CleanupTables()
     {
-        await using var connection = await databaseConnectionProvider.GetOpenConnection(CancellationToken.None);
+        await using var connection = await DatabaseConnectionProvider.GetOpenConnection(CancellationToken.None);
 
         await CleanupTable(connection, "order_event");
         await CleanupTable(connection, "order_relation");
@@ -51,7 +51,7 @@ public class OrderRepositoryFixture
     {
         var repository = new OrderRepository(
             new NullLogger<OrderRepository>(),
-            databaseConnectionProvider,
+            DatabaseConnectionProvider,
             new OrderSourceEventMapping());
         return repository;
     }

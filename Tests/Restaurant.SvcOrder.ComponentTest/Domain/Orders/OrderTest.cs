@@ -13,7 +13,7 @@ public partial class OrderTest
     public void Load_ByOrderId_NotFound()
     {
         var id = OrderId.NewOrderId();
-        var repositoryUnderTest = Fixture.CreateRepositoryUnderTest();
+        var repositoryUnderTest = CreateRepositoryUnderTest();
 
         var exception = Assert.ThrowsAsync<OrderNotFoundException>(() => Order.Load(id, repositoryUnderTest, CancellationToken.None));
         Assert.NotNull(exception);
@@ -29,11 +29,11 @@ public partial class OrderTest
     {
         var expectedOrderId = OrderId.NewOrderId();
 
-        var expectedOrder = Fixture.Data.CreateOrder()
+        var expectedOrder = CreateOrder()
             .WithId(expectedOrderId)
             .Build();
         
-        var repositoryUnderTest = Fixture.CreateRepositoryUnderTest();
+        var repositoryUnderTest = CreateRepositoryUnderTest();
         await expectedOrder.Save(repositoryUnderTest, CancellationToken.None);
 
         var actualOrder = await Order.Load(expectedOrderId, repositoryUnderTest, CancellationToken.None);
