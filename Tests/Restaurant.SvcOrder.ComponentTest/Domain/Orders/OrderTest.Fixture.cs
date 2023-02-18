@@ -67,9 +67,9 @@ public partial class OrderTest
     }
 
     /// <summary>
-    /// Defines all mocks that are used in this test
+    /// Defines all mocks that are used in this test.
     /// </summary>
-    /// <remarks>Mocks can have state so renew the instance before each test to avoid sharing state between tests</remarks>
+    /// <remarks>Mocks can have state. Renew the instance before each test to avoid sharing state between tests.</remarks>
     private class Mocks
     {
         public readonly ILogger<OrderRepository> LoggerRepository = new NullLogger<OrderRepository>();
