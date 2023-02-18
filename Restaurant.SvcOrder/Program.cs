@@ -1,5 +1,3 @@
-using System.Diagnostics.Metrics;
-using System.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration.Json;
@@ -7,8 +5,6 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using OpenTelemetry;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 using Serilog;
 using Serilog.Events;
 #pragma warning disable IDE0079 // Remove unnecessary suppression
@@ -35,6 +31,13 @@ public class Program
         ConfigureDatabaseConnection();
         ConfigureMetrics();
         ConfigureMetricsEndpoint();
+        ConfigureUseCases();
+
+        void ConfigureUseCases()
+        {
+            services.AddTransient<Domain.Orders.IOrderRepository, Repositories.Orders.OrderRepository>();
+            services.AddTransient<Domain.Orders.Order.PersistenceContext>();
+        }
 
         void ConfigureDatabaseConnection()
         {
@@ -93,7 +96,7 @@ public class Program
         services.AddGrpc();
     }
 
-    public static async Task<int> Main(string[] args)
+    public static async Task<int> Main(string[] _)
     {
         try
         {

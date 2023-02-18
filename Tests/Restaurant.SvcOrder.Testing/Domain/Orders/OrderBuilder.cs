@@ -1,5 +1,4 @@
-﻿using NUnit.Framework.Constraints;
-using Restaurant.SvcOrder.Domain.Orders;
+﻿using Restaurant.SvcOrder.Domain.Orders;
 using Restaurant.SvcOrder.Domain.Orders.SourceEvents;
 using Restaurant.SvcOrder.Domain.SourceEvents;
 
@@ -17,7 +16,7 @@ public class OrderBuilder
         return this;
     }
 
-    public Order Build()
+    public Order Build(Order.PersistenceContext orderPersistenceContext)
     {
         var orderCreated = new OrderCreated()
         {
@@ -25,7 +24,7 @@ public class OrderBuilder
             OrderId = Id
         };
 
-        var testData = new Order(orderCreated);
+        var testData = new Order(orderPersistenceContext, orderCreated);
         return testData;
     }
 }

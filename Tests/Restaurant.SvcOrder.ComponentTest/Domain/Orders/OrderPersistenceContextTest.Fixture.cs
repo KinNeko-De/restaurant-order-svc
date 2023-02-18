@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
+using Restaurant.SvcOrder.Domain.Orders;
 using Restaurant.SvcOrder.Repositories;
 using Restaurant.SvcOrder.Repositories.Orders;
 using Restaurant.SvcOrder.Testing.Domain.Orders;
@@ -13,7 +14,7 @@ namespace Restaurant.SvcOrder.ComponentTest.Domain.Orders;
 
 
 [TestFixture]
-public partial class OrderTest
+public partial class OrderPersistenceContextTest
 {
     private readonly OrderRepositoryFixture orderRepositoryFixture = new (new DatabaseFixture().GetConnectionProviderToLocalDatabase());
     private Mocks mocks = new ();
@@ -53,17 +54,18 @@ public partial class OrderTest
     /// You can modify the test data using the builder pattern.
     /// </summary>
     /// <returns></returns>
-    public OrderBuilder CreateOrder()
+    public static OrderBuilder CreateOrder()
     {
         return new OrderBuilder();
     }
 
-    private OrderRepository CreateRepositoryUnderTest()
+    private Order.PersistenceContext CreateSystemUnderTest()
     {
-        return new OrderRepository(
+        return new Order.PersistenceContext(
+            new OrderRepository(
             mocks.LoggerRepository,
             orderRepositoryFixture.DatabaseConnectionProvider,
-            new OrderSourceEventMapping());
+            new OrderSourceEventMapping()));
     }
 
     /// <summary>

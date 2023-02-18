@@ -11,7 +11,6 @@ public class OrderRepositoryFixture
 {
     public DatabaseConnectionProvider DatabaseConnectionProvider { get; }
 
-
     public OrderRepositoryFixture(DatabaseConnectionProvider databaseConnectionProvider)
     {
         DatabaseConnectionProvider = databaseConnectionProvider;
@@ -19,24 +18,24 @@ public class OrderRepositoryFixture
 
     public static async Task SaveToLocalDatabase(Order order)
     {
-        var fixture = new OrderRepositoryFixture(new DatabaseFixture().GetConnectionProviderToLocalDatabase());
-        await fixture.SaveToDatabase(order);
+        await SaveToDatabase(order);
     }
 
-    public async Task SaveToDatabase(Order order)
+    public static async Task SaveToDatabase(Order order)
     {
-        await order.Save(CreateRepository(), CancellationToken.None);
+        await order.Save(CancellationToken.None);
     }
 
-    public static async Task LoadFromLocalDatabase(OrderId orderId)
+    public static async Task<Order> LoadFromLocalDatabase(OrderId orderId)
     {
         var fixture = new OrderRepositoryFixture(new DatabaseFixture().GetConnectionProviderToLocalDatabase());
-        await fixture.LoadFromDatabase(orderId);
+        return await fixture.LoadFromDatabase(orderId);
     }
 
     public async Task<Order> LoadFromDatabase(OrderId orderId)
     {
-        return await Order.Load(orderId, CreateRepository(), CancellationToken.None);
+        var persistenceContext = CreatePersistenceContext();
+        return await persistenceContext.Load(orderId, CancellationToken.None);
     }
 
     public async Task CleanupTables()
@@ -47,13 +46,13 @@ public class OrderRepositoryFixture
         await CleanupTable(connection, "order_relation");
     }
 
-    private OrderRepository CreateRepository()
+    private Order.PersistenceContext CreatePersistenceContext()
     {
-        var repository = new OrderRepository(
+        return new Order.PersistenceContext(
+            new OrderRepository(
             new NullLogger<OrderRepository>(),
             DatabaseConnectionProvider,
-            new OrderSourceEventMapping());
-        return repository;
+            new OrderSourceEventMapping()));
     }
 
     private static async Task CleanupTable(NpgsqlConnection connection, string table)
