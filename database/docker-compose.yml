@@ -1,4 +1,5 @@
 version: '3.9'
+name: restaurant-order-db
 services:
   restaurant-order-db:
     image: postgres
