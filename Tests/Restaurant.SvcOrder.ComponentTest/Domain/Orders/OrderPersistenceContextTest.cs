@@ -7,15 +7,15 @@ using Restaurant.SvcOrder.Domain.Orders.SourceEvents;
 namespace Restaurant.SvcOrder.ComponentTest.Domain.Orders;
 
 [NonParallelizable]
-public partial class OrderTest
+public partial class OrderPersistenceContextTest
 {
     [Test]
     public void Load_ByOrderId_NotFound()
     {
         var id = OrderId.NewOrderId();
-        var repositoryUnderTest = Fixture.CreateRepositoryUnderTest();
+        var sut = CreateSystemUnderTest();
 
-        var exception = Assert.ThrowsAsync<OrderNotFoundException>(() => Order.Load(id, repositoryUnderTest, CancellationToken.None));
+        var exception = Assert.ThrowsAsync<OrderNotFoundException>(() => sut.Load(id, CancellationToken.None));
         Assert.NotNull(exception);
         StringAssert.Contains(id.ToString(), exception!.Message);
     }
@@ -28,16 +28,18 @@ public partial class OrderTest
     public async Task SaveLoad_ByOrderId_OrderCreated()
     {
         var expectedOrderId = OrderId.NewOrderId();
+        var expectedLastSequenceNumber = 1;
 
-        var expectedOrder = Fixture.Data.CreateOrder()
+        var sut = CreateSystemUnderTest();
+        var expectedOrder = CreateOrder()
             .WithId(expectedOrderId)
-            .Build();
+            .Build(sut);
         
-        var repositoryUnderTest = Fixture.CreateRepositoryUnderTest();
-        await expectedOrder.Save(repositoryUnderTest, CancellationToken.None);
+        await expectedOrder.Save(CancellationToken.None);
 
-        var actualOrder = await Order.Load(expectedOrderId, repositoryUnderTest, CancellationToken.None);
+        var actualOrder = await sut.Load(expectedOrderId, CancellationToken.None);
 
         Assert.AreEqual(expectedOrderId, actualOrder.Id);
+        Assert.AreEqual(expectedLastSequenceNumber, actualOrder.GetLastSourceEventSequenceNumber());
     }
 }

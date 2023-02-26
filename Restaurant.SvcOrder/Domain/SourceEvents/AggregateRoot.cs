@@ -14,8 +14,16 @@ public class AggregateRoot: IAggregateRoot
     /// <param name="sourceEvent"></param>
     protected void NewSourceEvent(ISourceEvent sourceEvent)
     {
-        AppliedSourceEvents.Add(sourceEvent);
         NotPersistedSourceEvents.Add(AppliedSourceEvents.Count, sourceEvent);
+    }
+
+    /// <summary>
+    /// Only call from types of the aggregate
+    /// </summary>
+    /// <param name="sourceEvent"></param>
+    protected void SourceEventApplied(ISourceEvent sourceEvent)
+    {
+        AppliedSourceEvents.Add(sourceEvent);
     }
 
     protected bool NeedsToBeSaved()
