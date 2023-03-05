@@ -1,17 +1,11 @@
-﻿using Grpc.Core;
-using Grpc.Health.V1;
+﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Restaurant.SvcOrder.Operations.HealthChecks.Grpc;
 
-public class GrpcHealthCheck : Health.HealthBase
+public class GrpcHealthCheck : IHealthCheck
 {
-    public override Task<HealthCheckResponse> Check(HealthCheckRequest request, ServerCallContext context)
+    public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new())
     {
-        var serviceStatus = request.Service is "" or "healthy" ? HealthCheckResponse.Types.ServingStatus.Serving : HealthCheckResponse.Types.ServingStatus.Unknown;
-
-        return Task.FromResult(new HealthCheckResponse()
-        {
-            Status = serviceStatus
-        });
+        return Task.FromResult(HealthCheckResult.Healthy());
     }
 }
