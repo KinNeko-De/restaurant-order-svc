@@ -86,15 +86,25 @@ public class Program
     {
         ConfigureDependencyInjection(services, configurationManager);
 
+        services.AddGrpc();
+        services.AddControllers().AddControllersAsServices();
+
+        const string live = "live";
+        const string ready = "ready";
         services.AddHealthChecks()
             .AddCheck<Operations.HealthChecks.Diagnostics.HttpHealthCheck>(
                 "http_health_check",
                 HealthStatus.Unhealthy,
-                new[] { "ready" });
-
-        services.AddControllers().AddControllersAsServices();
-
-        services.AddGrpc();
+                new[] { ready });
+        services.AddGrpcHealthChecks(options =>
+            {
+                options.Services.MapService(live, _ => false);
+                options.Services.MapService(ready, check => check.Tags.Contains(ready));
+            })
+            .AddCheck<Operations.HealthChecks.Grpc.GrpcHealthCheck>(
+                "grpc_health_check",
+                HealthStatus.Unhealthy,
+                new[] { ready });
     }
 
     public static async Task<int> Main(string[] _)
@@ -170,7 +180,7 @@ public class Program
 
         app.MapHealthChecks("/health/live", new HealthCheckOptions() { Predicate = _ => false }); // runs no checks, just to test if application is live
         app.MapHealthChecks("/health/ready", new HealthCheckOptions()); // run all health checks
-        app.MapGrpcService<Operations.HealthChecks.Grpc.GrpcHealthCheck>();
+        app.MapGrpcHealthChecksService();
         app.MapControllers();
         /* Use for open telemetry manual testing
         app.MapGet("/hello", () =>
