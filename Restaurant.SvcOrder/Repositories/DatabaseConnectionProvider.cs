@@ -3,17 +3,12 @@ using Npgsql;
 
 namespace Restaurant.SvcOrder.Repositories;
 
-public class DatabaseConnectionProvider
-{
-    private readonly DatabaseConnectionConfiguration connectionConfig;
-    private string? connectionString;
-
-    public DatabaseConnectionProvider(
-        IOptions<DatabaseConnectionConfiguration> connectionConfig
+public class DatabaseConnectionProvider(
+    IOptions<DatabaseConnectionConfiguration> connectionConfig
     )
-    {
-        this.connectionConfig = connectionConfig.Value;
-    }
+{
+    private readonly DatabaseConnectionConfiguration connectionConfig = connectionConfig.Value;
+    private string? connectionString;
 
     public async Task<NpgsqlConnection> GetOpenConnection(CancellationToken cancellationToken)
     {
