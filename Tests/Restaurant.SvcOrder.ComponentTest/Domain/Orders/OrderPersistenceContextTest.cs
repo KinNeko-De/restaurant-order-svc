@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using Restaurant.SvcOrder.Domain.Orders;
 using Restaurant.SvcOrder.Domain.Orders.SourceEvents;
 
@@ -16,8 +17,8 @@ public partial class OrderPersistenceContextTest
         var sut = CreateSystemUnderTest();
 
         var exception = Assert.ThrowsAsync<OrderNotFoundException>(() => sut.Load(id, CancellationToken.None));
-        Assert.NotNull(exception);
-        StringAssert.Contains(id.ToString(), exception!.Message);
+        Assert.That(exception, Is.Null);
+        Assert.That(exception!.Message, Contains.Substring(id.ToString()));
     }
 
     /// <summary>
@@ -39,7 +40,7 @@ public partial class OrderPersistenceContextTest
 
         var actualOrder = await sut.Load(expectedOrderId, CancellationToken.None);
 
-        Assert.AreEqual(expectedOrderId, actualOrder.Id);
-        Assert.AreEqual(expectedLastSequenceNumber, actualOrder.GetLastSourceEventSequenceNumber());
+        Assert.That(expectedOrderId, Is.EqualTo(actualOrder.Id));
+        Assert.That(expectedLastSequenceNumber, Is.EqualTo(actualOrder.GetLastSourceEventSequenceNumber()));
     }
 }
