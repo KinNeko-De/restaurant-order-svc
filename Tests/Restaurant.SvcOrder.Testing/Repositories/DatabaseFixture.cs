@@ -17,7 +17,6 @@ public class DatabaseFixture
             MaxPoolSize = 5,
             SearchPath = "order",
             SslMode = SslMode.Prefer,
-            TrustServerCertificate = true,
             Timeout = 30,
         };
     }
