@@ -77,8 +77,7 @@ public class Program
                         otlpConfig.Protocol = OtlpExportProtocol.Grpc;
                     })
                 */
-                )
-                .StartWithHost();
+                );
         }
     }
 
