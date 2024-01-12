@@ -202,9 +202,9 @@ public class Program
         host.UseSerilog((hostingContext, loggerConfiguration) =>
         {
             string[] excludedRequestPaths =
-            {
+            [
                 "/health",
-            };
+            ];
 
             loggerConfiguration.ReadFrom.Configuration(hostingContext.Configuration)
                 .Enrich.WithProperty("AssemblyVersion", typeof(Program).Assembly.GetName().Version)
