@@ -17,7 +17,7 @@ public partial class OrderPersistenceContextTest
         var sut = CreateSystemUnderTest();
 
         var exception = Assert.ThrowsAsync<OrderNotFoundException>(() => sut.Load(id, CancellationToken.None));
-        Assert.That(exception, Is.Null);
+        Assert.That(exception, Is.Not.Null);
         Assert.That(exception!.Message, Contains.Substring(id.ToString()));
     }
 
