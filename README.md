@@ -37,9 +37,17 @@ You can also use dotnet counters on a local started application.
 1. get the process id from the visual studio ui
 2. Open a cmd
 
+```bat
 dotnet tool install --global dotnet-counters
+```
+
+```bat
 dotnet counters monitor --process-id <process_id> --counters restaurant-order-svc // for application metrics
+```
+
+```bat
 dotnet counters monitor --process-id <process_id> // for System.Runtime metrics
+```
 
 # Tracing
 Is out of scope for now.

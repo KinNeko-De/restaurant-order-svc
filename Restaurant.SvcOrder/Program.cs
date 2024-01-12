@@ -64,10 +64,10 @@ public class Program
                     .AddMeter(Operations.Metrics.Metric.ApplicationName)
                 // TODO RuntimeInstrumentation works but spams the console. reactivate after every thing is done
                 // .AddRuntimeInstrumentation()
-                // TODO find out which package should be used for AspNetCoreInstrumentation
+                // TODO AddAspNetCoreInstrumentation works but spams the console. reactivate after every thing is done
                 // .AddAspNetCoreInstrumentation()
 #if DEBUG
-                    .AddConsoleExporter(builder => builder.Targets = ConsoleExporterOutputTargets.Console)
+                .AddConsoleExporter(builder => builder.Targets = ConsoleExporterOutputTargets.Console)
 #endif
                 /* Exporter endpoint where you find the open telemetry collector (push) or where to expose (pull)
                 .AddOtlpExporter(
