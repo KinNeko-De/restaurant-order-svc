@@ -97,8 +97,8 @@ public class Program
                 new[] { ready });
         services.AddGrpcHealthChecks(options =>
             {
-                options.Services.MapService(live, _ => false);
-                options.Services.MapService(ready, check => check.Tags.Contains(ready));
+                options.Services.Map(live, _ => false);
+                options.Services.Map(ready, check => check.Tags.Contains(ready));
             })
             .AddCheck<Operations.HealthChecks.Grpc.GrpcHealthCheck>(
                 "grpc_health_check",
