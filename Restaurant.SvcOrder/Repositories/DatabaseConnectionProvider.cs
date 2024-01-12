@@ -38,7 +38,6 @@ public class DatabaseConnectionProvider
                 Username = connectionConfig.User,
                 SearchPath = connectionConfig.SearchPath,
                 Password = connectionConfig.Password,
-                TrustServerCertificate = connectionConfig.TrustServerCertificate,
                 SslMode = connectionConfig.SslMode,
                 MaxPoolSize = connectionConfig.MaxPoolSize,
                 Timeout =connectionConfig.Timeout,
