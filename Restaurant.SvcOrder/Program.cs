@@ -64,10 +64,10 @@ public class Program
                     .AddMeter(Operations.Metrics.Metric.ApplicationName)
                 // TODO RuntimeInstrumentation works but spams the console. reactivate after every thing is done
                 // .AddRuntimeInstrumentation()
-                // TODO find out which package should be used for AspNetCoreInstrumentation
+                // TODO AddAspNetCoreInstrumentation works but spams the console. reactivate after every thing is done
                 // .AddAspNetCoreInstrumentation()
 #if DEBUG
-                    .AddConsoleExporter(builder => builder.Targets = ConsoleExporterOutputTargets.Console)
+                .AddConsoleExporter(builder => builder.Targets = ConsoleExporterOutputTargets.Console)
 #endif
                 /* Exporter endpoint where you find the open telemetry collector (push) or where to expose (pull)
                 .AddOtlpExporter(
@@ -77,8 +77,7 @@ public class Program
                         otlpConfig.Protocol = OtlpExportProtocol.Grpc;
                     })
                 */
-                )
-                .StartWithHost();
+                );
         }
     }
 
@@ -98,8 +97,8 @@ public class Program
                 new[] { ready });
         services.AddGrpcHealthChecks(options =>
             {
-                options.Services.MapService(live, _ => false);
-                options.Services.MapService(ready, check => check.Tags.Contains(ready));
+                options.Services.Map(live, _ => false);
+                options.Services.Map(ready, check => check.Tags.Contains(ready));
             })
             .AddCheck<Operations.HealthChecks.Grpc.GrpcHealthCheck>(
                 "grpc_health_check",
@@ -203,9 +202,9 @@ public class Program
         host.UseSerilog((hostingContext, loggerConfiguration) =>
         {
             string[] excludedRequestPaths =
-            {
+            [
                 "/health",
-            };
+            ];
 
             loggerConfiguration.ReadFrom.Configuration(hostingContext.Configuration)
                 .Enrich.WithProperty("AssemblyVersion", typeof(Program).Assembly.GetName().Version)
