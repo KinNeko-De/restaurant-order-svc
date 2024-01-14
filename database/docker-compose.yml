@@ -5,7 +5,7 @@ services:
     image: postgres
     container_name: restaurant-order-db
     networks:
-      - dev-net
+      - project-network
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -22,7 +22,7 @@ services:
     image: flyway/flyway
     command: migrate -user=${DB_USER} -password=${DB_PASSWORD} -url="jdbc:postgresql://restaurant-order-db:5432/${DB_DATABASE}" -schemas=${DB_SCHEMA} -locations='filesystem:/sql'
     networks:
-      - dev-net
+      - project-network
     container_name: restaurant-order-db-patch
     depends_on:
       restaurant-order-db:
@@ -33,7 +33,7 @@ services:
     image: flyway/flyway
     command: validate -user=${DB_USER} -password=${DB_PASSWORD} -url="jdbc:postgresql://restaurant-order-db:5432/${DB_DATABASE}" -schemas=${DB_SCHEMA} -locations='filesystem:/sql'
     networks:
-      - dev-net
+      - project-network
     container_name: restaurant-order-db-patch-validate
     depends_on:
       restaurant-order-db-patch:
@@ -41,6 +41,6 @@ services:
     volumes:
       - ./patch:/sql
 networks:
-  dev-net:
-    name: restaurant-dev-net
+  project-network:
+    name: restaurant
     external: true
