@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using OpenTelemetry;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;
 using Serilog;
@@ -55,9 +54,10 @@ public class Program
         void ConfigureMetricsEndpoint()
         {
             // TODO Configuration must be renamed based on if pull or push is used
-            //var metricSection = configurationManager.GetSection(nameof(Operations.Metrics.MetricConfiguration));
-            // var metricConfiguration = metricSection.Get<Operations.Metrics.MetricConfiguration>() ?? throw new InvalidOperationException($"{nameof(Operations.Metrics.MetricConfiguration)} can not be null");
-            // services.Configure<Operations.Metrics.MetricConfiguration>(metricSection);
+            var metricSection = configurationManager.GetSection(nameof(Operations.Metrics.MetricConfiguration));
+            var metricConfiguration = metricSection.Get<Operations.Metrics.MetricConfiguration>() ?? throw new InvalidOperationException($"{nameof(Operations.Metrics.MetricConfiguration)} can not be null");
+            services.AddOptions<Operations.Metrics.MetricConfiguration>().Bind(metricSection).ValidateOnStart();
+
 
             services.AddOpenTelemetry()
                 .WithMetrics(metricBuilder => metricBuilder
@@ -69,14 +69,11 @@ public class Program
 #if DEBUG
                 .AddConsoleExporter(builder => builder.Targets = ConsoleExporterOutputTargets.Console)
 #endif
-                /* Exporter endpoint where you find the open telemetry collector (push) or where to expose (pull)
-                .AddOtlpExporter(
-                    otlpConfig =>
-                    {
-                        otlpConfig.Endpoint = new Uri(metricConfiguration.BuildUri());
-                        otlpConfig.Protocol = OtlpExportProtocol.Grpc;
-                    })
-                */
+                .AddOtlpExporter(otlpConfig =>
+                {
+                    otlpConfig.Endpoint = new Uri(metricConfiguration.BuildUri());
+                    otlpConfig.Protocol = OtlpExportProtocol.Grpc;
+                })
                 );
         }
     }
@@ -181,10 +178,9 @@ public class Program
         app.MapHealthChecks("/health/ready", new HealthCheckOptions()); // run all health checks
         app.MapGrpcHealthChecksService();
         app.MapControllers();
-        /* Use for open telemetry manual testing
         app.MapGet("/hello", () =>
         {
-            using var activity = Activity.Current;
+            using var activity = System.Diagnostics.Activity.Current;
             activity?.SetTag("foo", 1);
             activity?.SetTag("bar", "Hello, World!");
             activity?.SetTag("baz", new int[] { 1, 2, 3 });
@@ -194,7 +190,6 @@ public class Program
 
             return "Hello, World!";
         });
-        */
     }
 
     private static void ConfigureHost(ConfigureHostBuilder host)

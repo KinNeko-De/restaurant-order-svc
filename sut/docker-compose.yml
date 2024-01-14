@@ -3,10 +3,10 @@ name: restaurant-order-svc
 
 services:
   restaurant-order-svc:
-    image: restaurant.order-svc
+    image: restaurant-order-svc
     networks:
-      - dev-net
-    container_name: restaurant.order-svc
+      - project-network
+    container_name: restaurant-order-svc
     build:
       dockerfile: dockerfile
     ports:
@@ -38,7 +38,17 @@ services:
     - Serilog__WriteTo__0__Args__outputTemplate=[{Timestamp:o}] [{Level:u3}] [{Application}] [{Message}] [{Exception}] [{Properties:j}] {NewLine}
     - Serilog__Enrich=FromLogContext
     - Serilog__Properties__Application=restaurant.order-svc
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib
+    networks:
+      - project-network
+    container_name: otel-collector
+    volumes:
+    - ./otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml
+    ports:
+      - 13133:13133 # health_check extension
+      - 4317:4317 # OTLP gRPC receiver
 networks:
-  dev-net:
-    name: restaurant-dev-net
+  project-network:
+    name: restaurant
     external: true

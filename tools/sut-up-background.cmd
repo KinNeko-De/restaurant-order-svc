@@ -1,5 +1,5 @@
 :: starts the system under test
-docker network create restaurant-dev-net
+docker network create restaurant
 
 pushd ..\restaurant.svcorder
 dotnet publish -o ../sut/publish -c Release --no-self-contained

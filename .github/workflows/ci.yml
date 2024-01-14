@@ -34,7 +34,7 @@ jobs:
       timeout-minutes: 10
 
     - name: Create docker network
-      run: 'docker network create restaurant-dev-net'
+      run: 'docker network create restaurant'
     - name: Start database
       run: docker compose -f database/docker-compose.yml up --wait --quiet-pull
     - name: ComponentTest
