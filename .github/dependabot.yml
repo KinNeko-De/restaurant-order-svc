@@ -6,8 +6,8 @@ registries:
     url: https://nuget.pkg.github.com/KinNeko-DE/index.json
     token: ${{ secrets.READ_PACKAGES_PAT }}
 updates:
-  - package-ecosystem: "nuget"
-    directory: "/"
-    registries: "*"
-    schedule:
-      interval: "monthly"
+  # - package-ecosystem: "nuget"
+  #   directory: "/"
+  #   registries: "*"
+  #   schedule:
+  #     interval: "monthly"
