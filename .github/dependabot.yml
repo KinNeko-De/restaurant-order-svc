@@ -5,9 +5,10 @@ registries:
     type: nuget-feed
     url: https://nuget.pkg.github.com/KinNeko-DE/index.json
     token: ${{ secrets.READ_PACKAGES_PAT }}
-updates: []
-  # - package-ecosystem: "nuget"
-  #   directory: "/"
-  #   registries: "*"
-  #   schedule:
-  #     interval: "monthly"
+updates:
+  - package-ecosystem: "nuget"
+    directory: "/"
+    registries: "*"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 0 # disable, because i needxat least one item in the array
