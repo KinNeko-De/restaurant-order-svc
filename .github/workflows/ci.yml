@@ -16,9 +16,9 @@ jobs:
     name: ci
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup .NET
-      uses: actions/setup-dotnet@v2
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.x
     - name: Remove Github nuget source that was added with nuget.config
@@ -63,7 +63,7 @@ jobs:
       run: docker compose -f sut/docker-compose.yml down
 
     - name: Publish code coverage
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         root_dir: .
