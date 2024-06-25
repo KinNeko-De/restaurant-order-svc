@@ -52,8 +52,10 @@ jobs:
 
 
     - name: Show database logs
+      if: always()  
       run: docker compose -f database/docker-compose.yml logs
     - name: Show system under test logs
+      if: always()
       run: docker compose -f sut/docker-compose.yml logs
     - name: Stop database
       if: always()
