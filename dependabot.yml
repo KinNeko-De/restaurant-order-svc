@@ -1,0 +1,8 @@
+version: 2
+registries:
+  # https://github.com/SchemaStore
+  nuget-feed:
+    url: https://nuget.pkg.github.com/KinNeko-DE/index.json
+    token: 
+
+    
