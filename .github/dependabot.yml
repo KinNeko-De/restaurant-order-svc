@@ -8,5 +8,6 @@ registries:
 updates:
   - package-ecosystem: "nuget"
     directory: "/"
+    regestries: "*"
     schedule:
       interval: "monthly"
