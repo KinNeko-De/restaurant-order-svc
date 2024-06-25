@@ -1,6 +1,7 @@
 version: 2
 registries:
   # https://github.com/SchemaStore/schemastore/blob/master/src/schemas/json/dependabot-2.0.json
-  nuget-feed:
+  github-nuget-kinnekode:
+    type: nuget-feed
     url: https://nuget.pkg.github.com/KinNeko-DE/index.json
     token: ${{ secrets.READ_PACKAGES_PAT }}
